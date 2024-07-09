@@ -15,12 +15,18 @@ ARG DEV=false
 #runs a single command for a single layer for the image
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    #--virtual ".tmp..." groups dependencies packages to make deleting them easier
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     #shell code that runs the code if in DEV mode
     if [ $DEV = "true" ]; \
       then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
+    #we remove the packages we already used for installation
+    apk del .tmp-build-deps && \
     adduser \
         --disabled-password \
         --no-create-home \
