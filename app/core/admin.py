@@ -29,7 +29,7 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = ['last_login']
     add_fieldsets = (
         (None, {
-            'classes': ('wide',), # white space before boxes
+            'classes': ('wide',),  # white space before boxes
             'fields': (
                 'email',
                 'password1',
